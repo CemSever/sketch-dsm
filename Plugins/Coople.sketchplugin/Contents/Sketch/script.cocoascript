@@ -1,0 +1,103 @@
+var onRun = function(context) {
+var Document = require('sketch/dom').Document
+var document = Document.getSelectedDocument();
+
+var filePath = askFolderPath() + "Components.csv";
+var componentData = createCSV(document);
+
+if (writeTextToFile(componentData, filePath)) {
+	alert(filePath, "Created");
+}
+
+function alert(msg, title) {
+	[[NSApplication sharedApplication] displayDialog:msg withTitle:title];
+}
+
+function askFolderPath() {
+	var panel = [NSOpenPanel openPanel];
+	panel.canChooseFiles = false;
+	panel.canChooseDirectories = true;
+	panel.canCreateDirectories = true;
+
+	var clicked = [panel runModal];
+
+	if (clicked == NSFileHandlingPanelOKButton) {
+		var absolutePath = [NSString stringWithFormat:@"%@", [[panel URLs] objectAtIndex:0]];
+
+		var path = [absolutePath stringByReplacingOccurrencesOfString:"file://" withString:""];
+
+		return path;
+	}
+}
+
+function createCSV(document) {
+    var pageIndex = 0;
+    var pageCount = document.pages.length;
+
+    var title = "Component Group,Component Name,Position,Size,Status";
+    var columnCount = title.split(',').length;
+
+    var csv = title;
+    csv += '\n';
+    for (pageIndex = 0; pageIndex < pageCount; pageIndex++) {
+        var page = document.pages[pageIndex];
+
+        var componentIndex = 0;
+        var componentCount = page.layers.length;
+        for (componentIndex = 0; componentIndex < componentCount; componentIndex++) {
+        	var component = page.layers[componentIndex];
+
+			var parts = component.name.split('/');
+            var columValues = parts.fill("", parts.length, columnCount);
+            
+            var tempName = columValues.join(',');
+
+            csv += tempName + '\r\n';
+        }
+    }
+
+    // Remove spaces
+    // csv = csv.replace(/\s/g,'');
+
+    return csv;
+}
+
+function makeComponentData(document) {
+	var pageIndex = 0;
+	var pageCount = document.pages.length;
+
+	var components = [];
+	for (pageIndex = 0; pageIndex < pageCount; pageIndex++) {
+	    var page = document.pages[pageIndex];
+	    
+	    var componentIndex = 0;
+	    var componentCount = page.layers.length;
+	    for (componentIndex = 0; componentIndex < componentCount; componentIndex++) {
+	        var component = page.layers[componentIndex];
+
+	        components.push({
+	            name: component.name
+	        });
+	    }
+	}
+
+	var dictionary = { "components": components };
+
+	return dictionary;
+}
+
+function writeDataToFile(data, filePath) {
+	var json = JSON.stringify(data, null, "\t");
+
+	var fileData = NSString.stringWithString(json);
+
+	return [fileData writeToFile:filePath atomically:true encoding:NSUTF8StringEncoding error:error];
+}
+
+function writeTextToFile(text, filePath) {
+	var fileData = [NSString stringWithFormat:@"%@", text];
+	var path = [NSString stringWithFormat:@"%@", filePath];
+
+	return [fileData writeToFile:path atomically:true encoding:NSUTF8StringEncoding error:nil];
+}
+};
