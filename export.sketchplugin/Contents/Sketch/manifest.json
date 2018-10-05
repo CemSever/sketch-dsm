@@ -1,29 +1,25 @@
 {
-  "compatibleVersion": 3,
-  "bundleVersion": 1,
-  "icon": "icon.png",
+  "author": "",
   "commands": [
     {
-      "name": "Export Json File",
-      "identifier": "my-command-identifier",
-      "script": "my-command.js"
-    },
-    {
-      "name": "Export CSV File",
-      "identifier": "csv-identifier",
-      "script": "csv.js"
+      "script": "script.cocoascript",
+      "name": "Export to CSV...",
+      "handlers": {
+        "run": "onRun"
+      },
+      "identifier": "com.bohemiancoding.sketch.runscriptidentifier"
     }
   ],
   "menu": {
-    "title": "Coople DSM ",
+    "title": "Coople",
     "items": [
-      "my-command-identifier",
-      "csv-identifier"
+      "com.bohemiancoding.sketch.runscriptidentifier"
     ]
   },
-  "version": "0.1.0",
-  "name": "export",
-  "identifier": "export",
+  "identifier": "com.example.sketch.c835fa7c-3a27-486b-9e81-88ae610ba195",
+  "version": "1.0",
+  "authorEmail": "",
+  "name": "Coople",
   "disableCocoaScriptPreprocessor": true,
   "appcast": "https://raw.githubusercontent.com//master/.appcast.xml"
 }

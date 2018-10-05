@@ -1,23 +1,24 @@
 {
-    "compatibleVersion": 3,
-    "bundleVersion": 1,
-    "icon": "icon.png",
-    "commands": [
+  "author" : "",
+  "commands" : [
     {
-        "name": "Export Json File",
-        "identifier": "my-command-identifier",
-        "script": "./my-command.js"
-    },
-    {
-        "name": "Export CSV File",
-        "identifier": "csv-identifier",
-        "script": "./csv.js"
-    }],
-    "menu":
-    {
-        "title": "Coople DSM ",
-        "items": [
-            "my-command-identifier", "csv-identifier"
-        ]
+      "script" : "script.cocoascript",
+      "name" : "Export to CSV...",
+      "handlers" : {
+        "run" : "onRun"
+      },
+      "identifier" : "com.bohemiancoding.sketch.runscriptidentifier"
     }
+  ],
+  "menu" : {
+    "title" : "Coople",
+    "items" : [
+      "com.bohemiancoding.sketch.runscriptidentifier"
+    ]
+  },
+  "identifier" : "com.example.sketch.c835fa7c-3a27-486b-9e81-88ae610ba195",
+  "version" : "1.0",
+  "description" : "",
+  "authorEmail" : "",
+  "name" : "Coople"
 }
