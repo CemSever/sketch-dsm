@@ -1,18 +1,23 @@
 {
-  "compatibleVersion": 3,
-  "bundleVersion": 1,
-  "icon": "icon.png",
-  "commands": [
+    "compatibleVersion": 3,
+    "bundleVersion": 1,
+    "icon": "icon.png",
+    "commands": [
     {
-      "name": "my-command",
-      "identifier": "my-command-identifier",
-      "script": "./my-command.js"
+        "name": "Export Json File",
+        "identifier": "my-command-identifier",
+        "script": "./my-command.js"
+    },
+    {
+        "name": "Export CSV File",
+        "identifier": "csv-identifier",
+        "script": "./csv.js"
+    }],
+    "menu":
+    {
+        "title": "Coople DSM ",
+        "items": [
+            "my-command-identifier", "csv-identifier"
+        ]
     }
-  ],
-  "menu": {
-    "title": "export",
-    "items": [
-      "my-command-identifier"
-    ]
-  }
 }

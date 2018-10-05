@@ -10,15 +10,15 @@ export default function(context) {
 
     var componentData = makeComponentData(document);
     var csvData = createCSV(document);
-
-    // writeFile('/Users/cemsever/components.json', componentData);
     writeFile('/Users/cemsever/components.csv', csvData);
 
-
-    // if (layer.type == "Artboard" || layer.type == "SymbolMaster")
+    log(getCurrentFilePath);
 
 }
 
+export function getCurrentFilePath(context) {
+  return context.document.fileURL().path().replace(/\.sketch$/, '')
+}
 
 function writeFile(path, content) {
     const string = NSString.stringWithFormat("%@", content);
@@ -41,7 +41,7 @@ function makeComponentData(document) {
         var componentCount = page.layers.length;
         for (componentIndex = 0; componentIndex < componentCount; componentIndex++) {
             var component = page.layers[componentIndex];
-
+            // log(component.id);
             components.push({
                 name: component.name,
                 parent: page.name
@@ -55,46 +55,58 @@ function makeComponentData(document) {
 
 
 function createCSV(document) {
+
     var pageIndex = 0;
     var pageCount = document.pages.length;
 
-    var components = "Component Group , Component Name  , Position , Size , Status ";
+    var components = "Component Group , Component Name  , Position , Size , Status, Custom ";
     components += "\n";
+
     for (pageIndex = 0; pageIndex < pageCount; pageIndex++) {
         var page = document.pages[pageIndex];
+        if (page.name != "Symbols") {
+            var componentIndex = 0;
+            var componentCount = page.layers.length;
 
-        var componentIndex = 0;
-        var componentCount = page.layers.length;
-        for (componentIndex = 0; componentIndex < componentCount; componentIndex++) {
-            var component = page.layers[componentIndex];
-            var compName = component.name;
-            var tempName = compName.split('/');
-            log(tempName.length);
+            for (componentIndex = 0; componentIndex < componentCount; componentIndex++) {
+                var component = page.layers[componentIndex];
+                var compName = component.name;
+                var tempName = compName.split('/');
 
-            var nameIndex = 0;
-            var nameCount = tempName.length;
+                var nameIndex = 0;
+                var nameCount = tempName.length;
 
-            for (nameIndex = 0; nameIndex < nameCount; nameIndex++) {
+                for (nameIndex = 0; nameIndex < nameCount; nameIndex++) {
 
-                if (tempName[nameIndex] != " ") {
-                    components += tempName[nameIndex];
+                    if (tempName[nameIndex] != " ") {
+                        components += tempName[nameIndex];
 
-                } else {
-                	components += "";
+                    } else {
+                        components += "";
+                    }
+
+                    if (nameIndex != nameCount - 1) {
+                        components += ","
+
+
+                    }
+
                 }
-
-                if (nameIndex != nameCount - 1) {
-                    components += ","
-
-
-                }
-
+                components += "\n";
             }
-            components += "\n";
         }
+
     }
 
     var csv = components;
-    log(csv);
     return csv;
 }
+
+function createArray(){
+    var components
+}
+
+// TODO
+//     var table = createTable(document);
+//      createarray with component.group, component.name, component.position, component.size, component.status, component.custom, component.id
+//      change createCSV to handle arrays
