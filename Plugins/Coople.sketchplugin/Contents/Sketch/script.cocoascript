@@ -31,14 +31,21 @@ function askFolderPath() {
 }
 
 function createCSV(document) {
+    var columnSeparator = ",";
+
+    var nameColumns = "Component Group,Component Name,Position,Size,Status";
+    var nameColumnsCount = nameColumns.split(columnSeparator).length;
+
+    var elementColumns = "Width,Height";
+
+    var columns = [nameColumns, elementColumns].join(columnSeparator);
+    var columnCount = columns.split(columnSeparator).length;
+
+    var csv = columns;
+    csv += '\n';
+
     var pageIndex = 0;
     var pageCount = document.pages.length;
-
-    var title = "Component Group,Component Name,Position,Size,Status";
-    var columnCount = title.split(',').length;
-
-    var csv = title;
-    csv += '\n';
     for (pageIndex = 0; pageIndex < pageCount; pageIndex++) {
         var page = document.pages[pageIndex];
 
@@ -47,19 +54,25 @@ function createCSV(document) {
         for (componentIndex = 0; componentIndex < componentCount; componentIndex++) {
         	var component = page.layers[componentIndex];
 
-			var parts = component.name.split('/');
-            var columValues = parts.fill("", parts.length, columnCount);
+			var attributes = nameAttributes(nameColumnsCount, component);
+
+            attributes.push(component.frame.width);
+            attributes.push(component.frame.height);
             
-            var tempName = columValues.join(',');
+            var tempName = attributes.join(columnSeparator);
 
             csv += tempName + '\r\n';
         }
     }
 
-    // Remove spaces
-    // csv = csv.replace(/\s/g,'');
-
     return csv;
+}
+
+/// Component name attributes
+function nameAttributes(tagsCount, layer) {
+	var attributes = layer.name.split('/');
+
+	return fit(attributes, tagsCount, "");
 }
 
 function makeComponentData(document) {
@@ -99,5 +112,17 @@ function writeTextToFile(text, filePath) {
 	var path = [NSString stringWithFormat:@"%@", filePath];
 
 	return [fileData writeToFile:path atomically:true encoding:NSUTF8StringEncoding error:nil];
+}
+
+/// Fit array with elements to size length
+function fit(array, size, element) {
+	var originalLength = array.length;
+
+	var index = 0;
+    for (index = originalLength; index < size; index++) {
+    	array.push(element);
+    }
+
+    return array;
 }
 };
